@@ -6,6 +6,7 @@ import Stripe from 'stripe'
 
 import { stripe } from '../lib/stripe'
 import * as S from '../styles/pages/home'
+import { formatMonetary } from '../utils'
 
 import 'keen-slider/keen-slider.min.css'
 
@@ -55,7 +56,7 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: price.unit_amount,
+      price: formatMonetary(Number(price.unit_amount) / 100),
     }
   })
 
