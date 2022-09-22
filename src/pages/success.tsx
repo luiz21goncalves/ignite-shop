@@ -45,8 +45,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const product = session.line_items?.data[0].price?.product as Stripe.Product
   const customerName = session.customer_details?.name
 
-  console.log({ customer: session.customer_details })
-
   return {
     props: {
       customerName,
