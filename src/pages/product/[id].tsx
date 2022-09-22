@@ -1,5 +1,7 @@
+import axios from 'axios'
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next'
 import Image from 'next/future/image'
+import { useState } from 'react'
 import Stripe from 'stripe'
 
 import { stripe } from '../../lib/stripe'
@@ -12,6 +14,7 @@ type Product = {
   imageUrl: string
   price: string
   description: string
+  defaultPriceId: string
 }
 
 type ProductDetailsProps = {
@@ -19,6 +22,28 @@ type ProductDetailsProps = {
 }
 
 const ProductDetails: NextPage<ProductDetailsProps> = ({ product }) => {
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false)
+
+  async function handleByProduct() {
+    try {
+      setIsCreatingCheckoutSession(true)
+      const { data } = await axios.post<{ checkoutUrl: string }>(
+        '/api/checkout/create',
+        {
+          priceId: product.defaultPriceId,
+        },
+      )
+
+      const { checkoutUrl } = data
+
+      window.location.href = checkoutUrl
+    } catch (err) {
+      setIsCreatingCheckoutSession(false)
+      alert('Falha ao redirecionar para checkout')
+    }
+  }
+
   return (
     <S.Container>
       <S.ImageContainer>
@@ -29,7 +54,9 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ product }) => {
         <h1>{product.name}</h1>
         <span>{product.price}</span>
         <p>{product.description}</p>
-        <button>Comprar agora</button>
+        <button disabled={isCreatingCheckoutSession} onClick={handleByProduct}>
+          Comprar agora
+        </button>
       </S.ProductDetails>
     </S.Container>
   )
@@ -67,6 +94,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
     imageUrl: images[0],
     price: formattedPrice,
     description,
+    defaultPriceId: price.id,
   }
 
   return {

@@ -61,7 +61,12 @@ export const ProductDetails = styled('main', {
     transition: 'background-color 200ms',
   },
 
-  'button:hover': {
+  'button:disabled': {
+    opacity: 0.6,
+    cursor: 'not-allowed',
+  },
+
+  'button:not(:disabled):hover': {
     backgroundColor: '$green300',
   },
 })
