@@ -1,6 +1,7 @@
 import { useKeenSlider } from 'keen-slider/react'
 import type { GetStaticProps, NextPage } from 'next'
 import Image from 'next/future/image'
+import Head from 'next/head'
 import Link from 'next/link'
 import Stripe from 'stripe'
 
@@ -27,25 +28,31 @@ const Home: NextPage<HomeProps> = ({ products }) => {
   })
 
   return (
-    <S.Container ref={sliderRef} className="keen-slider">
-      {products.map((product) => (
-        <Link
-          key={product.id}
-          href={`/product/${product.id}`}
-          passHref
-          prefetch={false}
-        >
-          <S.Product className="keen-slider__slide">
-            <Image src={product.imageUrl} width={520} height={480} alt="" />
+    <>
+      <Head>
+        <title>Home | Ignite Shop</title>
+      </Head>
 
-            <footer>
-              <strong>{product.name}</strong>
-              <span>R$ {product.price}</span>
-            </footer>
-          </S.Product>
-        </Link>
-      ))}
-    </S.Container>
+      <S.Container ref={sliderRef} className="keen-slider">
+        {products.map((product) => (
+          <Link
+            key={product.id}
+            href={`/product/${product.id}`}
+            passHref
+            prefetch={false}
+          >
+            <S.Product className="keen-slider__slide">
+              <Image src={product.imageUrl} width={520} height={480} alt="" />
+
+              <footer>
+                <strong>{product.name}</strong>
+                <span>R$ {product.price}</span>
+              </footer>
+            </S.Product>
+          </Link>
+        ))}
+      </S.Container>
+    </>
   )
 }
 

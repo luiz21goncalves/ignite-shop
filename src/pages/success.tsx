@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/future/image'
+import Head from 'next/head'
 import Link from 'next/link'
 import { Stripe } from 'stripe'
 
@@ -16,22 +17,29 @@ type SuccessProps = {
 
 const Success: NextPage<SuccessProps> = ({ customerName, product }) => {
   return (
-    <S.Container>
-      <h1>Compra efetuada!</h1>
+    <>
+      <Head>
+        <title>Compra efetuada | Ignite Shop</title>
+        <meta name="robots" content="noindex" />
+      </Head>
 
-      <S.ImageContainer>
-        <Image alt="" src={product.imageUrl} width={120} height={110} />
-      </S.ImageContainer>
+      <S.Container>
+        <h1>Compra efetuada!</h1>
 
-      <p>
-        Uhuul <strong>{customerName}</strong>, sua{' '}
-        <strong>{product.name}</strong> já está a caminho da sua casa.
-      </p>
+        <S.ImageContainer>
+          <Image alt="" src={product.imageUrl} width={120} height={110} />
+        </S.ImageContainer>
 
-      <Link href="/">
-        <a>Voltar ao catálogo</a>
-      </Link>
-    </S.Container>
+        <p>
+          Uhuul <strong>{customerName}</strong>, sua{' '}
+          <strong>{product.name}</strong> já está a caminho da sua casa.
+        </p>
+
+        <Link href="/">
+          <a>Voltar ao catálogo</a>
+        </Link>
+      </S.Container>
+    </>
   )
 }
 

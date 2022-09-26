@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next'
 import Image from 'next/future/image'
+import Head from 'next/head'
 import { useState } from 'react'
 import Stripe from 'stripe'
 
@@ -45,20 +46,29 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ product }) => {
   }
 
   return (
-    <S.Container>
-      <S.ImageContainer>
-        <Image src={product.imageUrl} alt="" width={520} height={480} />
-      </S.ImageContainer>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
 
-      <S.ProductDetails>
-        <h1>{product.name}</h1>
-        <span>{product.price}</span>
-        <p>{product.description}</p>
-        <button disabled={isCreatingCheckoutSession} onClick={handleByProduct}>
-          Comprar agora
-        </button>
-      </S.ProductDetails>
-    </S.Container>
+      <S.Container>
+        <S.ImageContainer>
+          <Image src={product.imageUrl} alt="" width={520} height={480} />
+        </S.ImageContainer>
+
+        <S.ProductDetails>
+          <h1>{product.name}</h1>
+          <span>{product.price}</span>
+          <p>{product.description}</p>
+          <button
+            disabled={isCreatingCheckoutSession}
+            onClick={handleByProduct}
+          >
+            Comprar agora
+          </button>
+        </S.ProductDetails>
+      </S.Container>
+    </>
   )
 }
 
