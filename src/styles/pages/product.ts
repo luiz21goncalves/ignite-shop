@@ -5,7 +5,7 @@ export const Container = styled('main', {
   gridTemplateColumns: '1fr 1fr',
   alignItems: 'stretch',
   gap: '4rem',
-  maxWidth: 1180,
+  maxWidth: 1168,
   margin: '0 auto',
 })
 

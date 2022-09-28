@@ -3,6 +3,7 @@ import type { GetStaticProps, NextPage } from 'next'
 import Image from 'next/future/image'
 import Head from 'next/head'
 import Link from 'next/link'
+import { Handbag } from 'phosphor-react'
 import Stripe from 'stripe'
 
 import { stripe } from '../lib/stripe'
@@ -24,7 +25,10 @@ type HomeProps = {
 
 const Home: NextPage<HomeProps> = ({ products }) => {
   const [sliderRef] = useKeenSlider({
-    slides: { perView: 3, spacing: 48 },
+    slides: {
+      perView: 2,
+      spacing: 48,
+    },
   })
 
   return (
@@ -35,21 +39,22 @@ const Home: NextPage<HomeProps> = ({ products }) => {
 
       <S.Container ref={sliderRef} className="keen-slider">
         {products.map((product) => (
-          <Link
-            key={product.id}
-            href={`/product/${product.id}`}
-            passHref
-            prefetch={false}
-          >
-            <S.Product className="keen-slider__slide">
-              <Image src={product.imageUrl} width={520} height={480} alt="" />
+          <S.Product key={product.id} className="keen-slider__slide">
+            <Image src={product.imageUrl} width={520} height={480} alt="" />
 
-              <footer>
+            <S.ProductFooter>
+              <div>
                 <strong>{product.name}</strong>
-                <span>R$ {product.price}</span>
-              </footer>
-            </S.Product>
-          </Link>
+                <span>{product.price}</span>
+              </div>
+
+              <Link href={`/product/${product.id}`} passHref prefetch={false}>
+                <a>
+                  <Handbag size={32} weight="bold" />
+                </a>
+              </Link>
+            </S.ProductFooter>
+          </S.Product>
         ))}
       </S.Container>
     </>
