@@ -14,7 +14,7 @@ export const Header = styled('header', {
   maxWidth: 1168,
   margin: '0 auto',
 
-  nav: {
+  div: {
     display: 'flex',
     width: '100%',
     alignItems: 'center',
@@ -22,7 +22,7 @@ export const Header = styled('header', {
   },
 })
 
-export const CartButton = styled('a', {
+export const CartButton = styled('button', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -32,6 +32,7 @@ export const CartButton = styled('a', {
   borderRadius: 8,
   transition: 'all 200ms',
   position: 'relative',
+  border: 'none',
 
   '&:hover': {
     opacity: 0.7,

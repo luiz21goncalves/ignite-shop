@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Handbag } from 'phosphor-react'
 
 import logoImg from '../assets/logo.svg'
+import { CartModal } from '../components/CartModal'
 import { globalStyles } from '../styles/global'
 import * as S from '../styles/pages/app'
 
@@ -13,19 +14,19 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <S.Container>
       <S.Header>
-        <nav>
+        <div>
           <Link href="/" prefetch={false} passHref>
             <a>
               <Image src={logoImg} alt="" />
             </a>
           </Link>
 
-          <Link href="/cart" prefetch={false} passHref>
+          <CartModal>
             <S.CartButton>
               <Handbag weight="bold" size={24} />
             </S.CartButton>
-          </Link>
-        </nav>
+          </CartModal>
+        </div>
       </S.Header>
       <Component {...pageProps} />
     </S.Container>
