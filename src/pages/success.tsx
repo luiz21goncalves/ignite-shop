@@ -7,15 +7,19 @@ import { Stripe } from 'stripe'
 import { stripe } from '../lib/stripe'
 import * as S from '../styles/pages/success'
 
-type SuccessProps = {
-  customerName: string
-  product: {
-    name: string
-    imageUrl: string
-  }
+type Product = {
+  id: string
+  imageUrl: string
 }
 
-const Success: NextPage<SuccessProps> = ({ customerName, product }) => {
+type SuccessProps = {
+  customerName: string
+  products: Product[]
+}
+
+const Success: NextPage<SuccessProps> = (props) => {
+  const { customerName, products } = props
+
   return (
     <>
       <Head>
@@ -24,15 +28,20 @@ const Success: NextPage<SuccessProps> = ({ customerName, product }) => {
       </Head>
 
       <S.Container>
+        <div>
+          {products.map((product) => (
+            <S.ImageContainer key={product.id}>
+              <Image alt="" src={product.imageUrl} width={140} height={140} />
+            </S.ImageContainer>
+          ))}
+        </div>
+
         <h1>Compra efetuada!</h1>
 
-        <S.ImageContainer>
-          <Image alt="" src={product.imageUrl} width={120} height={110} />
-        </S.ImageContainer>
-
         <p>
-          Uhuul <strong>{customerName}</strong>, sua{' '}
-          <strong>{product.name}</strong> já está a caminho da sua casa.
+          Uhuul <strong>{customerName}</strong>, sua compra de{' '}
+          <strong>{products.length}</strong> camisetas já está a caminho da sua
+          casa.
         </p>
 
         <Link href="/">
@@ -59,16 +68,22 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     expand: ['line_items', 'line_items.data.price.product'],
   })
 
-  const product = session.line_items?.data[0].price?.product as Stripe.Product
+  const products = session.line_items?.data.map((item) => {
+    const product = item.price?.product as Stripe.Product
+
+    return {
+      id: product?.id,
+      imageUrl: product?.images[0],
+    }
+  })
   const customerName = session.customer_details?.name
+    ?.toLowerCase()
+    .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
 
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0],
-      },
+      products,
     },
   }
 }
