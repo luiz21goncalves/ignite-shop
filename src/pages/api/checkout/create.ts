@@ -2,18 +2,27 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '../../../lib/stripe'
 
+type Product = {
+  priceId: string
+}
+
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   if (req.method === 'POST') {
-    const { priceId } = req.body
+    const products = req.body.products as Product[]
 
-    if (!priceId) {
+    if (products.length === 0) {
       return res.status(400).json({
-        error: 'Price not found.',
+        error: 'Products not found.',
       })
     }
+
+    const items = products.map((product) => ({
+      quantity: 1,
+      price: product.priceId,
+    }))
 
     const successUrl = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`
     const cancelUrl = `${process.env.NEXT_URL}/`
@@ -22,12 +31,7 @@ export default async function handle(
       success_url: successUrl,
       cancel_url: cancelUrl,
       mode: 'payment',
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: items,
     })
 
     return res.status(201).json({

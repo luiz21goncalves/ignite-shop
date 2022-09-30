@@ -3,6 +3,7 @@ import Image from 'next/future/image'
 import Head from 'next/head'
 import Stripe from 'stripe'
 
+import { useCartContext } from '../../contexts/CartContext'
 import { stripe } from '../../lib/stripe'
 import * as S from '../../styles/pages/product'
 import { formatMonetary } from '../../utils'
@@ -11,7 +12,8 @@ type Product = {
   id: string
   name: string
   imageUrl: string
-  price: string
+  price: number
+  formattedPrice: string
   description: string
   defaultPriceId: string
 }
@@ -20,9 +22,13 @@ type ProductDetailsProps = {
   product: Product
 }
 
-const ProductDetails: NextPage<ProductDetailsProps> = ({ product }) => {
-  async function handleByProduct() {
-    console.log('handleByProduct')
+const ProductDetails: NextPage<ProductDetailsProps> = (props) => {
+  const { product } = props
+
+  const { addProduct } = useCartContext()
+
+  async function handleAddProductToCart() {
+    addProduct(product)
   }
 
   return (
@@ -38,9 +44,9 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ product }) => {
 
         <S.ProductDetails>
           <h1>{product.name}</h1>
-          <span>{product.price}</span>
+          <span>{product.formattedPrice}</span>
           <p>{product.description}</p>
-          <button onClick={handleByProduct}>Colocar na sacola</button>
+          <button onClick={handleAddProductToCart}>Colocar na sacola</button>
         </S.ProductDetails>
       </S.Container>
     </>
@@ -77,7 +83,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
     id,
     name,
     imageUrl: images[0],
-    price: formattedPrice,
+    price: price.unit_amount,
+    formattedPrice,
     description,
     defaultPriceId: price.id,
   }
